@@ -140,9 +140,22 @@ def load_lstm_model(ticker: str):
     return model, scaler
 
 
+def calculate_accuracy_metrics(y_true, y_pred):
+    """
+    Calculate MAE, RMSE and Directional Accuracy
+    """
+    mae = mean_absolute_error(y_true, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    direction_acc = np.mean(
+        np.sign(y_true) == np.sign(y_pred)
+    ) * 100
+
+    return mae, rmse, direction_acc
+
 @st.cache_resource
 def load_all_models(ticker: str):
     arima = load_arima_model(ticker)
     rf = load_rf_model(ticker)
     lstm, scaler = load_lstm_model(ticker)
+
     return arima, rf, lstm, scaler
